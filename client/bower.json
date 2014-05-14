@@ -1,0 +1,16 @@
+{
+  "name": "webapp",
+  "version": "0.0.0",
+  "authors": [
+    "André Gil <hey@andregil.net>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [],
+  "dependencies": {
+    "angular": "~1.2.16",
+    "jquery": "~2.1.1",
+    "lodash": "~2.4.1",
+    "angular-ui-router": "~0.2.10"
+  }
+}
