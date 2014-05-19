@@ -1,0 +1,14 @@
+---
+- name: Configure machines basics
+  hosts: all
+  sudo: yes
+  roles:
+    - extra-repositories
+    - iptables
+    - selinux
+
+- name: Install web server for the client
+  hosts: all
+  sudo: yes
+  roles:
+    - nginx

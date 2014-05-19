@@ -1,0 +1,6 @@
+[dag]
+name=Dag RPM Repository for Red Hat Enterprise Linux
+baseurl=http://apt.sw.be/redhat/el6/en/x86_64/dag/
+gpgcheck=1
+gpgkey=http://apt.sw.be/RPM-GPG-KEY.dag.txt
+enabled=1

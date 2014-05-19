@@ -1,0 +1,21 @@
+---
+- name: Download EPEL key
+  get_url: url=https://fedoraproject.org/static/0608B895.txt dest=/opt/0608B895.txt
+
+- name: Install EPEL key
+  rpm_key: key=/opt/0608B895.txt
+
+- name: Download EPEL repo
+  get_url: url=http://mirrors.einstein.yu.edu/epel/6/i386/epel-release-6-8.noarch.rpm dest=/opt/epel-release-6-8.noarch.rpm
+
+- name: Install EPEL repo
+  yum: name=/opt/epel-release-6-8.noarch.rpm
+
+- name: Install dag.repo
+  template: src=dag.repo dest=/etc/yum.repos.d/
+
+- name: Install centos.repo
+  template: src=centos.repo dest=/etc/yum.repos.d/
+
+- name: Install nginx.repo
+  template: src=nginx.repo dest=/etc/yum.repos.d/

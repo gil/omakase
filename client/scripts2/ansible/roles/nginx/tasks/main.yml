@@ -1,0 +1,13 @@
+---
+- name: Install nginx and web dependencies
+  yum: name={{ item }}
+  with_items:
+   - nginx
+   # - mod_ssl
+
+- name: disable apache service
+  service: name=httpd state=stopped enabled=no
+  ignore_errors: yes
+
+- name: nginx service state
+  service: name=nginx state=started enabled=yes

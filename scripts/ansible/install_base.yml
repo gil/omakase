@@ -1,0 +1,2 @@
+---
+- include: ../../client/scripts2/ansible/playbook.yml

@@ -1,0 +1,4 @@
+---
+- name: Starting Iptables service
+  service: name=iptables state=started enabled=yes
+  ignore_errors: True
