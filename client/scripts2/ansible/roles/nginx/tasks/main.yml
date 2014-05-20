@@ -5,9 +5,17 @@
    - nginx
    # - mod_ssl
 
-- name: disable apache service
+- name: Disable apache service
   service: name=httpd state=stopped enabled=no
   ignore_errors: yes
 
-- name: nginx service state
+- name: Remove default nginx config file
+  file: path=/etc/nginx/conf.d/default.conf state=absent
+  notify: restart nginx
+
+- name: Copy nginx config file
+  template: src=webapp.conf dest=/etc/nginx/conf.d
+  notify: restart nginx
+
+- name: Set nginx service state
   service: name=nginx state=started enabled=yes

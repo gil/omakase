@@ -4,6 +4,7 @@
 
 - command: /usr/bin/test -e /etc/selinux/config
   register: selinux_installed
+  changed_when: False
   ignore_errors: yes
 
 - name: Disable SELinux

@@ -7,7 +7,7 @@
     - iptables
     - selinux
 
-- name: Install web server for the client
+- name: Install nginx web server
   hosts: all
   sudo: yes
   roles:
