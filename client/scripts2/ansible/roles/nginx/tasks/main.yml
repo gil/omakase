@@ -2,7 +2,7 @@
 - name: Install nginx and web dependencies
   yum: name={{ item }}
   with_items:
-   - nginx
+   - nginx-1.6.0
    # - mod_ssl
 
 - name: Disable apache service
