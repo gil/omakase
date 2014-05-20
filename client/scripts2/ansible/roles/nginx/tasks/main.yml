@@ -19,3 +19,11 @@
 
 - name: Set nginx service state
   service: name=nginx state=started enabled=yes
+
+- name: Set user home e(+x)ecution permission to allow nginx access
+  file: path=/home/{{ ansible_ssh_user }} mode=701
+  # shell: chmod o+x ~
+
+- name: Create folder to deploy the app
+  file: path=/home/{{ ansible_ssh_user }}/apps/webapp/current state=directory
+  sudo: no
