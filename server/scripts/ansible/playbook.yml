@@ -3,3 +3,8 @@
   hosts: app
   roles:
     - ruby
+
+- name: Install Unicorn
+  hosts: app
+  roles:
+    - unicorn
