@@ -36,6 +36,10 @@
   shell: rbenv global {{ ruby_version }}
   when: ruby_global.stdout != ruby_version
 
+- name: Intall Bundler
+  gem: name=bundler version=1.6.2 state=present
+  when: ruby_global.stdout != ruby_version
+
 - name: Rehash
   shell: rbenv rehash
   when: ruby_global.stdout != ruby_version
