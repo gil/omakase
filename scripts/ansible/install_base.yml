@@ -7,5 +7,11 @@
     - iptables
     - selinux
 
+- name: Install MySQL database
+  hosts: db
+  sudo: yes
+  roles:
+    - mysql
+
 - include: ../../client/scripts2/ansible/playbook.yml
 - include: ../../server/scripts/ansible/playbook.yml

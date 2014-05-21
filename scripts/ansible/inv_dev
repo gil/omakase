@@ -3,3 +3,6 @@ vagrant@localhost:2222
 
 [app]
 vagrant@localhost:2222
+
+[db]
+vagrant@localhost:2222
