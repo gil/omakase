@@ -1,0 +1,6 @@
+---
+- name: Install basic dependencies
+  yum: name={{ item }}
+  sudo: yes
+  with_items:
+   - git-1.7.1

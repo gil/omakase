@@ -1,5 +1,5 @@
 ---
-- name: Install rbenv and Ruby
+- name: Install Ruby with rbenv
   hosts: app
   roles:
-    - rbenv
+    - ruby

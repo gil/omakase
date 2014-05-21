@@ -4,6 +4,7 @@
   sudo: yes
   roles:
     - extra-repositories
+    - basics
     - iptables
     - selinux
 
