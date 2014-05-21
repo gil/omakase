@@ -1,2 +1,5 @@
-[web]
+[client]
+vagrant@localhost:2222
+
+[app]
 vagrant@localhost:2222

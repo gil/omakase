@@ -5,8 +5,13 @@
    - nginx-1.6.0
    # - mod_ssl
 
+- name: Check if httpd service is available
+  stat: path=/etc/init.d/httpd
+  register: apache_installed
+
 - name: Disable apache service
   service: name=httpd state=stopped enabled=no
+  when: apache_installed.stat.exists
   ignore_errors: yes
 
 - name: Remove default nginx config file

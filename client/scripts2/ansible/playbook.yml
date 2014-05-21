@@ -8,7 +8,7 @@
     - selinux
 
 - name: Install nginx web server
-  hosts: all
+  hosts: client
   sudo: yes
   roles:
     - nginx

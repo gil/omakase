@@ -11,6 +11,18 @@
 - name: Install EPEL repo
   yum: name=/opt/epel-release-6-8.noarch.rpm
 
+- name: Download RPMforge key
+  get_url: url=http://apt.sw.be/RPM-GPG-KEY.dag.txt dest=/opt/RPMforge-KEY.txt
+
+- name: Install RPMforge key
+  rpm_key: key=/opt/RPMforge-KEY.txt
+
+- name: Download RPMforge repo
+  get_url: url=http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm dest=/opt/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm
+
+- name: Install RPMforge repo
+  yum: name=/opt/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm
+
 - name: Install dag.repo
   template: src=dag.repo dest=/etc/yum.repos.d/
 

@@ -1,0 +1,41 @@
+---
+- name: Install rbenv dependencies
+  yum: name={{ item }}
+  sudo: yes
+  with_items:
+   - git-1.7.1
+
+- name: Clone rbenv repository
+  git: repo=https://github.com/sstephenson/rbenv.git dest=~/.rbenv version=v0.4.0
+
+- name: Clone ruby-build
+  git: repo=https://github.com/sstephenson/ruby-build.git dest=~/.rbenv/plugins/ruby-build version=v20140517
+
+- name: Add rbenv to PATH
+  lineinfile: dest=~/.bashrc line="export PATH=\"$HOME/.rbenv/bin:$PATH\""
+
+- name: Enable rbenv shims and autocompletion
+  lineinfile: dest=~/.bashrc line="eval \"$(rbenv init -)\""
+
+- name: Check if version is already installed
+  shell: rbenv versions | grep {{ ruby_version }}
+  register: ruby_installed
+  changed_when: False
+  ignore_errors: yes
+
+- name: Install ruby version
+  shell: rbenv install {{ ruby_version }}
+  when: ruby_installed|failed
+
+- name: Check if {{ ruby_version }} is the global version
+  shell: rbenv global
+  register: ruby_global
+  changed_when: False
+
+- name: Set global ruby version
+  shell: rbenv global {{ ruby_version }}
+  when: ruby_global.stdout != ruby_version
+
+- name: Rehash
+  shell: rbenv rehash
+  when: ruby_global.stdout != ruby_version

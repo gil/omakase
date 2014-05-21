@@ -1,2 +1,3 @@
 ---
 - include: ../../client/scripts2/ansible/playbook.yml
+- include: ../../server/scripts/ansible/playbook.yml
