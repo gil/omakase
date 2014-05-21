@@ -30,8 +30,15 @@
   shell: rbenv global {{ ruby_version }}
   when: ruby_global.stdout != ruby_version
 
+- name: Check for Bundler
+  shell: gem list bundler -v 1.6.2 -i
+  register: bundler_installed
+  changed_when: False
+  ignore_errors: yes
+
 - name: Intall Bundler
-  gem: name=bundler version=1.6.2 state=present
+  shell: gem install bundler -v 1.6.2
+  when: bundler_installed.stdout == "false"
 
 - name: Rehash
   shell: rbenv rehash
