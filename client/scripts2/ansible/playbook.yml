@@ -1,12 +1,4 @@
 ---
-- name: Configure machines basics
-  hosts: all
-  sudo: yes
-  roles:
-    - extra-repositories
-    - iptables
-    - selinux
-
 - name: Install nginx web server
   hosts: client
   sudo: yes
