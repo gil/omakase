@@ -1,6 +1,8 @@
 ---
 - name: Install basic dependencies
-  yum: name={{ item }}
+  yum: name={{ item }} enablerepo=epel
   sudo: yes
   with_items:
    - git-1.7.1
+   - nodejs-0.10.26
+   - npm-1.3.6
