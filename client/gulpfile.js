@@ -23,18 +23,17 @@ var gulp = require('gulp'),
 var paths = {
   src: {
     index : './index.tpl.html',
-    baseCoffee : './coffee/*.coffee',
     coffee : './coffee/**/*.coffee',
-    styles : './client/style/**/*.css',
+    style : './style/**/*.css',
     templates : './templates/**/*.tpl.html',
-    images : './client/img/**/*'
+    images : './img/**/*'
   },
   dest: {
     index : './index.html',
     indexPath : './',
-    scripts : './js'
-  },
-  jsBuild : './js/**/*'
+    js : './js/**/*.js',
+    jsPath : './js'
+  }
 };
 
 gulp.task('clean', function() {
@@ -42,18 +41,11 @@ gulp.task('clean', function() {
     .pipe(clean());
 });
 
-gulp.task('client-coffee', ['base-coffee'], function() {
+gulp.task('coffee', function() {
 
   return gulp.src( paths.src.coffee )
     .pipe( coffee({ sourceMap: true }).on('error', gutil.log) )
-    .pipe( gulp.dest( paths.dest.scripts ) );
-});
-
-gulp.task('base-coffee', function() {
-
-  return gulp.src( paths.src.baseCoffee )
-    .pipe( coffee({ sourceMap: true }).on('error', gutil.log) )
-    .pipe( gulp.dest( paths.dest.scripts ) );
+    .pipe( gulp.dest( paths.dest.jsPath ) );
 });
 
 gulp.task('html-includes', function() {
@@ -71,13 +63,13 @@ gulp.task('html-livereload', ['html-includes'], function() {
     .pipe( gulp.dest( paths.dest.indexPath ) );
 });
 
-gulp.task('templates', ['client-coffee'], function() {
+gulp.task('templates', ['coffee'], function() {
 
   return gulp.src( paths.src.templates )
     .pipe( minifyHtml({ empty: true, conditionals: true, spare: true, quotes: true }) )
     .pipe( ngHtml2Js({ moduleName: 'appTemplates', prefix: 'templates/' }) )
     .pipe( concat('templates.js') )
-    .pipe( gulp.dest( paths.dest.scripts ) );
+    .pipe( gulp.dest( paths.dest.jsPath ) );
 });
 
 gulp.task('compress-images', function() {
@@ -87,7 +79,7 @@ gulp.task('compress-images', function() {
     .pipe( gulp.dest('build/img') );
 });
 
-gulp.task('compress-code', ['client-coffee', 'templates', 'html-includes'], function() {
+gulp.task('compress-code', ['coffee', 'templates', 'html-includes'], function() {
 
   return gulp.src( paths.dest.indexPath )
     .pipe(usemin({
@@ -98,9 +90,9 @@ gulp.task('compress-code', ['client-coffee', 'templates', 'html-includes'], func
     .pipe( gulp.dest('build/') );
 });
 
-// gulp.task('build', ['clean', 'client-coffee', 'templates', 'compress-images', 'html-includes', 'compress-code']);
+// gulp.task('build', ['clean', 'coffee', 'templates', 'compress-images', 'html-includes', 'compress-code']);
 
-gulp.task('default', ['html-includes', 'html-livereload', 'templates', 'client-coffee'], function() {
+gulp.task('default', ['html-includes', 'html-livereload', 'templates', 'coffee'], function() {
 
   var lr = tinylr();
   lr.listen(LIVE_RELOAD_PORT);
@@ -110,15 +102,15 @@ gulp.task('default', ['html-includes', 'html-livereload', 'templates', 'client-c
     paths.src.coffee,
     paths.src.templates,
     paths.src.images
-  ], ['html-includes', 'html-livereload', 'templates', 'client-coffee']).on('change', function(e) {
+  ], ['html-includes', 'html-livereload', 'templates', 'coffee']).on('change', function(e) {
     gutil.log('File ' + e.path + ' was ' + e.type + ', building again...');
   });
 
   gulp.watch([
-    paths.dest.indexPath,
-    paths.jsBuild,
+    paths.dest.index,
+    paths.dest.js,
     paths.src.templates,
-    paths.src.styles
+    paths.src.style
   ]).on('change', _.debounce(function(e) {
     lr.changed({ body: { files: [require('path').relative(__dirname, e.path)] } });
   }, 200));
