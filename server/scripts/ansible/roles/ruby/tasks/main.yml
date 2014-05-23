@@ -1,4 +1,10 @@
 ---
+- name: Install development dependencies
+  yum: name={{ item }} state=present
+  sudo: yes
+  with_items:
+    - mysql-devel
+
 - name: Clone rbenv repository
   git: repo=https://github.com/sstephenson/rbenv.git dest=~/.rbenv version=v0.4.0
 
@@ -39,6 +45,10 @@
 - name: Intall Bundler
   shell: gem install bundler -v 1.6.2
   when: bundler_installed.stdout == "false"
+
+- name: Make sure there's no lock to allow rehashing
+  file: path=~/.rbenv/shims/.rbenv-shim state=absent
+  sudo: yes
 
 - name: Rehash
   shell: rbenv rehash
