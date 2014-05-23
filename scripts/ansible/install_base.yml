@@ -8,6 +8,14 @@
     - iptables
     - selinux
 
+- name: Configure deployment directory
+  hosts:
+    - client
+    - app
+  sudo: yes
+  roles:
+    - deployment
+
 - name: Install MySQL database
   hosts: db
   sudo: yes
