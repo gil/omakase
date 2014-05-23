@@ -3,4 +3,4 @@
 angular.module("webapp")
   .controller "HomeController", ($scope) ->
 
-    console.log "Yeah!"
+    console.log "Yeah! :D"

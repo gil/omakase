@@ -23,18 +23,18 @@ var gulp = require('gulp'),
 var paths = {
   src: {
     index : './index.tpl.html',
-    baseCoffee : './scripts/*.coffee',
-    coffee : './scripts/**/*.coffee',
+    baseCoffee : './coffee/*.coffee',
+    coffee : './coffee/**/*.coffee',
     styles : './client/style/**/*.css',
     templates : './templates/**/*.tpl.html',
     images : './client/img/**/*'
   },
   dest: {
-    index : '../server/public/index.html',
-    indexPath : '../server/public/',
-    scripts : '../server/public/scripts/'
+    index : './index.html',
+    indexPath : './',
+    scripts : './js'
   },
-  jsBuild : '../public/scripts/**/*'
+  jsBuild : './js/**/*'
 };
 
 gulp.task('clean', function() {
@@ -59,7 +59,7 @@ gulp.task('base-coffee', function() {
 gulp.task('html-includes', function() {
 
   return gulp.src( paths.src.index )
-    .pipe( includeSources({ scriptExt : 'js' }) )
+    .pipe( includeSources() )
     .pipe( rename('index.html') )
     .pipe( gulp.dest( paths.dest.indexPath ) );
 });
