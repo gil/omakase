@@ -21,6 +21,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
   config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network "forwarded_port", guest: 8080, host: 9090
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -39,8 +40,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  config.vm.synced_folder "client", "/home/vagrant/apps/webapp-client/current"
-  config.vm.synced_folder "server", "/home/vagrant/apps/webapp-server/current"
+  config.vm.synced_folder ".", "/home/vagrant/apps/webapp/current"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -61,7 +61,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.playbook = "scripts/ansible/install_base.yml"
     ansible.inventory_path = "scripts/ansible/inv_dev"
     ansible.limit = 'all'
-    ansible.extra_vars = { env: "dev" }
+    ansible.extra_vars = { env: "development" }
     # ansible.verbose = "vvvv"
   end
 

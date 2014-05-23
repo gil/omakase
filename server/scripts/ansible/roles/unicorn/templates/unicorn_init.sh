@@ -12,10 +12,11 @@ set -e
 
 # Feel free to change any of the following variables for your app:
 TIMEOUT=${TIMEOUT-60}
-APP_ROOT=/home/{{ ansible_ssh_user }}/apps/webapp-server/current
+APP_ROOT=/home/{{ ansible_ssh_user }}/apps/webapp
+APP_CURRENT=$APP_ROOT/current/server
 AS_USER={{ ansible_ssh_user }}
-PID=$APP_ROOT/tmp/pids/unicorn.pid
-CMD="cd $APP_ROOT; bundle exec unicorn -D -c $APP_ROOT/config/unicorn.rb -E production"
+PID=$APP_CURRENT/tmp/pids/unicorn.pid
+CMD="cd $APP_CURRENT; bundle exec unicorn -D -c $APP_ROOT/shared/unicorn.rb -E {{ env }}"
 set -u
 
 OLD_PIN="$PID.oldbin"

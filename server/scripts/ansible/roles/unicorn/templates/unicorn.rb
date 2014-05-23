@@ -1,9 +1,9 @@
-root = "/home/{{ ansible_ssh_user }}/apps/webapp-server/current"
+root = "/home/{{ ansible_ssh_user }}/apps/webapp/current/server"
 working_directory root
 pid "#{root}/tmp/pids/unicorn.pid"
 stderr_path "#{root}/log/unicorn.log"
 stdout_path "#{root}/log/unicorn.log"
 
-listen "/tmp/unicorn.watermelon.sock"
+listen "/tmp/unicorn.webapp.sock"
 worker_processes 2
 timeout 30
