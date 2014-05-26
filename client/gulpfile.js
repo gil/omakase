@@ -17,13 +17,16 @@ var gulp = require('gulp'),
     includeSources = require('gulp-include-source'),
     rename = require('gulp-rename'),
     clean = require('gulp-clean'),
+    karma = require('gulp-karma'),
     _ = require('lodash'),
+    fs = require('fs'),
     LIVE_RELOAD_PORT = 35740;
 
 var paths = {
   src: {
     index : './index.tpl.html',
     coffee : './coffee/**/*.coffee',
+    vendor : 'vendorScripts',
     style : './style/**/*.css',
     templates : './templates/**/*.tpl.html',
     images : './img/**/*'
@@ -35,6 +38,8 @@ var paths = {
     jsPath : './js'
   }
 };
+
+var vendorScripts = fs.readFileSync( paths.src.vendor ).toString().split('\n');
 
 gulp.task('coffee', function() {
 
@@ -102,10 +107,12 @@ gulp.task('default', livereloadTasks, function() {
   gulp.watch([
     paths.src.index,
     paths.src.coffee,
-    paths.src.templates,
-    paths.src.images
+    paths.src.vendor,
+    paths.src.templates
   ], livereloadTasks).on('change', function(e) {
+
     gutil.log('File ' + e.path + ' was ' + e.type + ', building again...');
+    vendorScripts = fs.readFileSync( paths.src.vendor ).toString().split('\n');
   });
 
   gulp.watch([
@@ -116,5 +123,11 @@ gulp.task('default', livereloadTasks, function() {
   ]).on('change', _.debounce(function(e) {
     lr.changed({ body: { files: [require('path').relative(__dirname, e.path)] } });
   }, 200));
+
+  gulp.src( vendorScripts.concat([paths.dest.js, 'specs_js/**/*.js']) )
+    .pipe( karma({
+      configFile: 'karma.conf.js',
+      action: 'watch'
+    }) );
 
 });
