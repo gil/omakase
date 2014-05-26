@@ -72,6 +72,19 @@ gulp.task('templates', ['coffee'], function() {
     .pipe( gulp.dest( paths.dest.jsPath ) );
 });
 
+gulp.task('test', ['coffee'], function() {
+
+  return gulp.src( vendorScripts.concat([ paths.dest.js ]) )
+    .pipe(karma({
+      configFile: 'karma.conf.js',
+      action: 'run'
+    }))
+    .on('error', function(err) {
+      // Make sure failed tests cause gulp to exit non-zero
+      throw err;
+    });
+});
+
 gulp.task('clean', function() {
   return gulp.src('./build/*', {read: false})
     .pipe(clean());
@@ -95,7 +108,7 @@ gulp.task('compress-code', ['coffee', 'templates', 'html-includes'], function() 
     .pipe( gulp.dest('./build/') );
 });
 
-gulp.task('build', ['clean', 'html-includes', 'templates', 'coffee', 'compress-images', 'compress-code']);
+gulp.task('build', ['clean', 'html-includes', 'templates', 'coffee', 'test', 'compress-images', 'compress-code']);
 
 var livereloadTasks = ['html-includes', 'html-livereload', 'templates', 'coffee'];
 
