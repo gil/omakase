@@ -22,5 +22,5 @@
   roles:
     - mysql
 
-- include: ../../client/scripts2/ansible/playbook.yml
+- include: ../../client/scripts/ansible/playbook.yml
 - include: ../../server/scripts/ansible/playbook.yml
