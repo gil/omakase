@@ -68,7 +68,7 @@ gulp.task('templates', ['coffee'], function() {
   return gulp.src( paths.src.templates )
     .pipe( minifyHtml({ empty: true, conditionals: true, spare: true, quotes: true }) )
     .pipe( ngHtml2Js({ moduleName: 'appTemplates', prefix: 'templates/' }) )
-    .pipe( concat('templates.js') )
+    .pipe( concat('app/templates.js') )
     .pipe( gulp.dest( paths.dest.jsPath ) );
 });
 
@@ -124,7 +124,7 @@ gulp.task('default', livereloadTasks, function() {
     lr.changed({ body: { files: [require('path').relative(__dirname, e.path)] } });
   }, 200));
 
-  gulp.src( vendorScripts.concat([paths.dest.js, 'specs_js/**/*.js']) )
+  gulp.src( vendorScripts.concat([ paths.dest.js ]) )
     .pipe( karma({
       configFile: 'karma.conf.js',
       action: 'watch'
