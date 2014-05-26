@@ -39,7 +39,16 @@ var paths = {
   }
 };
 
-var vendorScripts = fs.readFileSync( paths.src.vendor ).toString().split('\n');
+function getTestScripts() {
+
+  var vendorScripts = fs.readFileSync( paths.src.vendor ).toString().split('\n');
+
+  return vendorScripts
+    .concat([
+      'bower_components/angular-mocks/angular-mocks.js',
+      paths.dest.js
+    ]);
+}
 
 gulp.task('coffee', function() {
 
@@ -74,7 +83,7 @@ gulp.task('templates', ['coffee'], function() {
 
 gulp.task('test', ['coffee'], function() {
 
-  return gulp.src( vendorScripts.concat([ paths.dest.js ]) )
+  return gulp.src( getTestScripts() )
     .pipe(karma({
       configFile: 'karma.conf.js',
       action: 'run'
@@ -123,9 +132,7 @@ gulp.task('default', livereloadTasks, function() {
     paths.src.vendor,
     paths.src.templates
   ], livereloadTasks).on('change', function(e) {
-
     gutil.log('File ' + e.path + ' was ' + e.type + ', building again...');
-    vendorScripts = fs.readFileSync( paths.src.vendor ).toString().split('\n');
   });
 
   gulp.watch([
@@ -137,7 +144,7 @@ gulp.task('default', livereloadTasks, function() {
     lr.changed({ body: { files: [require('path').relative(__dirname, e.path)] } });
   }, 200));
 
-  gulp.src( vendorScripts.concat([ paths.dest.js ]) )
+  gulp.src( getTestScripts() )
     .pipe( karma({
       configFile: 'karma.conf.js',
       action: 'watch'

@@ -1,4 +1,17 @@
 describe "something", () ->
 
+  HomeController = null;
+
+  beforeEach( module('webapp') )
+
+  beforeEach inject ($injector, _$rootScope_) ->
+    $controller = $injector.get('$controller')
+    $rootScope = _$rootScope_
+    $scope = $rootScope.$new()
+
+    HomeController = $controller 'HomeController',
+      '$rootScope': $rootScope
+      '$scope': $scope
+
   it "should do something", () ->
-    expect(1).toBe(1)
+    expect(HomeController).not.toBe null
