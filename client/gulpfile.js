@@ -35,7 +35,9 @@ var paths = {
     index : 'index.html',
     indexPath : './',
     js : 'js/**/*.js',
-    jsPath : 'js/'
+    jsPath : 'js/',
+    build : 'build/',
+    images : 'build/img'
   }
 };
 
@@ -95,7 +97,7 @@ gulp.task('test', ['coffee'], function() {
 });
 
 gulp.task('clean', function() {
-  return gulp.src('build/*', {read: false})
+  return gulp.src( paths.dest.build , {read: false} )
     .pipe(clean());
 });
 
@@ -103,7 +105,7 @@ gulp.task('compress-images', function() {
 
   return gulp.src( paths.src.images )
     .pipe( imagemin() )
-    .pipe( gulp.dest('build/img') );
+    .pipe( gulp.dest( paths.dest.images ) );
 });
 
 gulp.task('compress-code', ['coffee', 'templates', 'html-includes'], function() {
@@ -114,7 +116,7 @@ gulp.task('compress-code', ['coffee', 'templates', 'html-includes'], function() 
       html: [ minifyHtml({ empty: true, conditionals: true, spare: true, quotes: true }) ],
       js: [ ngmin(), uglify({ outSourceMap: true }), rev() ]
     }))
-    .pipe( gulp.dest('build/') );
+    .pipe( gulp.dest( paths.dest.build ) );
 });
 
 gulp.task('build', ['clean', 'html-includes', 'templates', 'coffee', 'test', 'compress-images', 'compress-code']);
