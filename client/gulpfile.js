@@ -101,14 +101,14 @@ gulp.task('clean', function() {
     .pipe(clean());
 });
 
-gulp.task('compress-images', function() {
+gulp.task('compress-images', ['clean'], function() {
 
   return gulp.src( paths.src.images )
     .pipe( imagemin() )
     .pipe( gulp.dest( paths.dest.images ) );
 });
 
-gulp.task('compress-code', ['coffee', 'templates', 'html-includes'], function() {
+gulp.task('compress-code', ['clean', 'coffee', 'templates', 'html-includes'], function() {
 
   return gulp.src( paths.dest.index )
     .pipe(usemin({
