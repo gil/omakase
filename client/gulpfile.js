@@ -26,8 +26,9 @@ var paths = {
   src: {
     index : 'index.tpl.html',
     coffee : 'coffee/**/*.coffee',
-    vendor : 'vendorScripts',
     style : 'style/**/*.css',
+    vendorScripts : 'vendorScripts',
+    vendorStyles : 'vendorStyles',
     templates : 'templates/**/*.tpl.html',
     images : 'img/**/*'
   },
@@ -43,7 +44,7 @@ var paths = {
 
 function getTestScripts() {
 
-  var vendorScripts = fs.readFileSync( paths.src.vendor ).toString().split('\n');
+  var vendorScripts = fs.readFileSync( paths.src.vendorScripts ).toString().split('\n');
 
   return vendorScripts
     .concat([
@@ -131,7 +132,8 @@ gulp.task('default', livereloadTasks, function() {
   gulp.watch([
     paths.src.index,
     paths.src.coffee,
-    paths.src.vendor,
+    paths.src.vendorScripts,
+    paths.src.vendorStyles,
     paths.src.templates
   ], livereloadTasks).on('change', function(e) {
     gutil.log('File ' + e.path + ' was ' + e.type + ', building again...');
