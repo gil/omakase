@@ -8,7 +8,7 @@ angular.module("webapp", [
     $urlRouterProvider.otherwise("/");
 
     $stateProvider
-      .state 'home',
+      .state "home",
         url: "/",
         templateUrl: "templates/home.tpl.html"
         controller: "HomeController"
