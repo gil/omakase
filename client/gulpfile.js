@@ -122,7 +122,7 @@ gulp.task('compress-code', ['clean', 'coffee', 'templates', 'html-includes'], fu
 
 gulp.task('build', ['clean', 'html-includes', 'templates', 'coffee', 'test', 'compress-images', 'compress-code']);
 
-var livereloadTasks = ['html-includes', 'html-livereload', 'templates', 'coffee'];
+var livereloadTasks = ['html-includes', 'html-livereload', 'coffee', 'templates'];
 
 gulp.task('default', livereloadTasks, function() {
 
