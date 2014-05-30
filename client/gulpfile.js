@@ -53,10 +53,15 @@ function getTestScripts() {
     ]);
 }
 
+function handleTaskError(e) {
+  gutil.log(e);
+  this.emit('end'); // Make sure errors won't stop gulp.watch
+}
+
 gulp.task('coffee', function() {
 
   return gulp.src( paths.src.coffee )
-    .pipe( coffee({ sourceMap: true }).on('error', gutil.log) )
+    .pipe( coffee({ sourceMap: true }).on('error', handleTaskError) )
     .pipe( gulp.dest( paths.dest.jsPath ) );
 });
 
