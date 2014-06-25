@@ -13,7 +13,7 @@ set -e
 # Feel free to change any of the following variables for your app:
 TIMEOUT=${TIMEOUT-60}
 APP_ROOT=/home/{{ ansible_ssh_user }}/apps/webapp
-APP_CURRENT=$APP_ROOT/current/server
+APP_CURRENT=$APP_ROOT/current/rails
 AS_USER={{ ansible_ssh_user }}
 PID=$APP_CURRENT/tmp/pids/unicorn.pid
 CMD="cd $APP_CURRENT; bundle exec unicorn -D -c $APP_ROOT/shared/unicorn.rb -E {{ env }}"

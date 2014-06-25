@@ -23,4 +23,4 @@
     - mysql
 
 - include: ../../client/scripts/ansible/playbook.yml
-- include: ../../server/scripts/ansible/playbook.yml
+- include: ../../rails/scripts/ansible/playbook.yml

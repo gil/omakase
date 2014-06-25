@@ -1,4 +1,4 @@
-root = "/home/{{ ansible_ssh_user }}/apps/webapp/current/server"
+root = "/home/{{ ansible_ssh_user }}/apps/webapp/current/rails"
 working_directory root
 pid "#{root}/tmp/pids/unicorn.pid"
 stderr_path "#{root}/log/unicorn.log"
