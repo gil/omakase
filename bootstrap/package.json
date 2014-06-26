@@ -1,0 +1,17 @@
+{
+  "name": "omakase-bootstrap",
+  "version": "0.0.0",
+  "description": "",
+  "main": "bootstrap.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "André Gil <hey@andregil.net> (http://somepixels.net/)",
+  "license": "MIT",
+  "devDependencies": {
+    "change-case": "^2.1.1",
+    "glob": "^4.0.2",
+    "lodash": "^2.4.1",
+    "prompt": "^0.2.13"
+  }
+}
