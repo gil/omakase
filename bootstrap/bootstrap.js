@@ -17,7 +17,7 @@ function replaceFiles(name) {
       pascalCase = changeCase.pascalCase(name);
 
   console.log( "Generating file list..." );
-  glob("**/+(Vagrantfile|*.+(coffee|rb|html|erb|yml|json|conf|sh))", { cwd : path.resolve(__dirname, "..") }, function (er, files) {
+  glob("../**/+(Vagrantfile|*.+(coffee|rb|html|erb|yml|json|conf|sh))", { cwd : __dirname }, function (er, files) {
     files = _.filter(files, function(file){ return !file.match(/\/(node_modules|bower_components|coverage)\//); });
 
     _.each(files, function(file){
