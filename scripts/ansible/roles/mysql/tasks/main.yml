@@ -12,13 +12,13 @@
   service: name=mysqld state=started enabled=true
 
 # - name: Create Application Database
-#   mysql_db: name=webapp_development state=present
+#   mysql_db: name=my_app_development state=present
 
 # - name: Create Application Database
-#   mysql_db: name=webapp_test state=present
+#   mysql_db: name=my_app_test state=present
 
 # - name: Create Application Database
-#   mysql_db: name=webapp_production state=present
+#   mysql_db: name=my_app_production state=present
 
 - name: Create Application DB User
   mysql_user: name=root priv=*.*:ALL host='%' state=present

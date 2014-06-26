@@ -2,7 +2,7 @@ describe "something", () ->
 
   HomeController = null;
 
-  beforeEach( module('webapp') )
+  beforeEach( module('myApp') )
 
   beforeEach inject ($injector, _$rootScope_) ->
     $controller = $injector.get('$controller')

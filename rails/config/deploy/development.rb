@@ -45,7 +45,7 @@ role :db,  %w{vagrant@localhost:2222}
 #   }
 
 # Read git from vagrant synced folder
-set :repo_url, '~/apps/webapp/current/.git'
+set :repo_url, '~/apps/my-app/current/.git'
 
 # We don't need the "current" symlink on Vagrant
 Rake::Task["deploy:symlink:release"].clear_actions

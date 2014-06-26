@@ -44,4 +44,4 @@ role :db,  %w{deploy@example.com}
 #     # password: 'please use keys'
 #   }
 
-set :repo_url, 'git@github.com:gil/webapp.git'
+set :repo_url, 'git@github.com:gil/my-app.git'

@@ -1,6 +1,6 @@
 "use strict";
 
-angular.module("webapp")
+angular.module("myApp")
   .controller "HomeController", ($scope) ->
 
     console.log "Yeah! :D"

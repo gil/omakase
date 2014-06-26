@@ -3,7 +3,7 @@
   file: path=/home/{{ ansible_ssh_user }}/apps owner={{ ansible_ssh_user }} mode=701 state=directory
 
 - name: Make sure our app directory is present and has correct permissions
-  file: path=/home/{{ ansible_ssh_user }}/apps/webapp owner={{ ansible_ssh_user }} mode=701 state=directory
+  file: path=/home/{{ ansible_ssh_user }}/apps/my-app owner={{ ansible_ssh_user }} mode=701 state=directory
 
 - name: Make sure our app shared files directory is present and has correct permissions
-  file: path=/home/{{ ansible_ssh_user }}/apps/webapp/shared owner={{ ansible_ssh_user }} mode=701 state=directory
+  file: path=/home/{{ ansible_ssh_user }}/apps/my-app/shared owner={{ ansible_ssh_user }} mode=701 state=directory

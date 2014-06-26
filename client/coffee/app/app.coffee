@@ -1,6 +1,6 @@
 "use strict"
 
-angular.module("webapp", [
+angular.module("myApp", [
   "appTemplates", "ui.router"
 ])
   .config ($stateProvider, $urlRouterProvider, $httpProvider) ->

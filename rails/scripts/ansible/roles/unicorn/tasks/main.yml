@@ -1,12 +1,12 @@
 ---
 - name: Generate unicorn config file
-  template: src=unicorn.rb dest=/home/{{ ansible_ssh_user }}/apps/webapp/shared/unicorn.rb
+  template: src=unicorn.rb dest=/home/{{ ansible_ssh_user }}/apps/my-app/shared/unicorn.rb
 
 - name: Generate unicorn service script
-  template: src=unicorn_init.sh dest=/etc/init.d/unicorn_webapp mode=755
+  template: src=unicorn_init.sh dest=/etc/init.d/unicorn_my_app mode=755
   sudo: yes
 
 - name: Copy nginx config file with proxy to unicorn
-  template: src=nginx.conf dest=/etc/nginx/conf.d/webapp.conf
+  template: src=nginx.conf dest=/etc/nginx/conf.d/my-app.conf
   sudo: yes
   notify: restart nginx
