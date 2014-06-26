@@ -1,7 +1,6 @@
 "use strict";
 
 var glob = require("glob"),
-    path = require("path"),
     _ = require("lodash"),
     prompt = require("prompt"),
     changeCase = require("change-case"),
