@@ -21,4 +21,4 @@
 #   mysql_db: name=my_app_production state=present
 
 - name: Create Application DB User
-  mysql_user: name=root priv=*.*:ALL host='%' state=present
+  mysql_user: name=root password= priv=*.*:ALL host='%' state=present
