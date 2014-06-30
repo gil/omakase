@@ -49,7 +49,7 @@ namespace :deploy do
   task :bundle_install do
     on roles(:app) do
 
-      within current_path.join('server') do
+      within current_path.join('rails') do
         execute :bundle, :install
       end
 
@@ -62,7 +62,7 @@ namespace :deploy do
   task :update_db do
     on roles(:app) do
 
-      within current_path.join('server') do
+      within current_path.join('rails') do
         execute :bundle, :exec, :rake, "db:create"
         execute :bundle, :exec, :rake, "db:migrate"
       end
