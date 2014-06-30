@@ -7,3 +7,6 @@
 
 - name: Make sure our app shared files directory is present and has correct permissions
   file: path=/home/{{ ansible_ssh_user }}/apps/my-app/shared owner={{ ansible_ssh_user }} mode=701 state=directory
+
+- name: Set local key as SSH authorized
+  authorized_key: user={{ ansible_ssh_user }} key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
