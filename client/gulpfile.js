@@ -81,6 +81,10 @@ function filterDeleted(renameFunction) {
   };
 }
 
+/*******
+** BUILD TASKS
+***/
+
 gulp.task('coffee', ['clean'], function() {
 
   return gulp.src( paths.src.coffee )
@@ -88,29 +92,22 @@ gulp.task('coffee', ['clean'], function() {
     .pipe( gulp.dest( paths.dest.jsPath ) );
 });
 
-gulp.task('html-includes', ['coffee', 'templates'], function() {
-
+function htmlIncludes() {
   return gulp.src( paths.src.index )
     .pipe( includeSources({ cwd : 'build/' }) )
     .pipe( rename('index.html') )
     .pipe( gulp.dest( paths.dest.indexPath ) );
-});
+}
+gulp.task('html-includes', ['coffee', 'templates'], htmlIncludes);
 
-gulp.task('html-livereload', ['html-includes'], function() {
-
-  return gulp.src( paths.dest.index )
-    .pipe( embedlr({ port : LIVE_RELOAD_PORT }) )
-    .pipe( gulp.dest( paths.dest.indexPath ) );
-});
-
-gulp.task('templates', ['clean'], function() {
-
+function templates() {
   return gulp.src( paths.src.templates )
     .pipe( minifyHtml({ empty: true, conditionals: true, spare: true, quotes: true }) )
     .pipe( ngHtml2Js({ moduleName: 'appTemplates', prefix: 'templates/' }) )
     .pipe( concat('app/templates.js') )
     .pipe( gulp.dest( paths.dest.jsPath ) );
-});
+}
+gulp.task('templates', ['clean'], templates);
 
 gulp.task('test', ['coffee', 'templates'], function() {
 
@@ -154,7 +151,22 @@ gulp.task('build', ['clean', 'html-includes', 'templates', 'coffee', 'test', 'co
     .pipe( clean() );
 });
 
-var livereloadTasks = ['html-includes', 'html-livereload', 'templates'];
+/*******
+** DEV TASKS
+***/
+
+gulp.task('dev-html-includes', ['dev-templates'], htmlIncludes);
+
+gulp.task('dev-templates', templates);
+
+gulp.task('dev-html-livereload', ['dev-html-includes'], function() {
+
+  return gulp.src( paths.dest.index )
+    .pipe( embedlr({ port : LIVE_RELOAD_PORT }) )
+    .pipe( gulp.dest( paths.dest.indexPath ) );
+});
+
+var livereloadTasks = ['dev-html-includes', 'dev-html-livereload', 'dev-templates'];
 
 gulp.task('default', livereloadTasks, function() {
 
