@@ -56,13 +56,6 @@ function getTestScripts() {
     ]);
 }
 
-// function handleTaskError(pluginName) {
-//   return function(e) {
-//     gutil.log(gutil.colors.red('ERROR [' + pluginName + ']:'), e);
-//     this.emit('end'); // Make sure errors won't stop gulp.watch
-//   };
-// }
-
 function filterDeleted(renameFunction) {
 
   renameFunction = renameFunction || function(filePath) { return filePath; };
@@ -85,32 +78,31 @@ function filterDeleted(renameFunction) {
 ** BUILD TASKS
 ***/
 
-gulp.task('coffee', ['clean'], function() {
-
+function buildCoffee() {
   return gulp.src( paths.src.coffee )
-    .pipe( coffee({ sourceMap: true })/*.on('error', handleTaskError('coffee'))*/ )
+    .pipe( coffee({ sourceMap: true }) )
     .pipe( gulp.dest( paths.dest.jsPath ) );
-});
+}
+gulp.task('coffee', ['clean'], buildCoffee);
 
-function htmlIncludes() {
+function buildHtmlIncludes() {
   return gulp.src( paths.src.index )
-    .pipe( includeSources({ cwd : 'build/' }) )
+    .pipe( includeSources({ cwd : paths.dest.build }) )
     .pipe( rename('index.html') )
     .pipe( gulp.dest( paths.dest.indexPath ) );
 }
-gulp.task('html-includes', ['coffee', 'templates'], htmlIncludes);
+gulp.task('html-includes', ['coffee', 'templates'], buildHtmlIncludes);
 
-function templates() {
+function buildTemplates() {
   return gulp.src( paths.src.templates )
     .pipe( minifyHtml({ empty: true, conditionals: true, spare: true, quotes: true }) )
     .pipe( ngHtml2Js({ moduleName: 'appTemplates', prefix: 'templates/' }) )
     .pipe( concat('app/templates.js') )
     .pipe( gulp.dest( paths.dest.jsPath ) );
 }
-gulp.task('templates', ['clean'], templates);
+gulp.task('templates', ['clean'], buildTemplates);
 
-gulp.task('test', ['coffee', 'templates'], function() {
-
+function buildTest() {
   return gulp.src( getTestScripts() )
     .pipe(karma({
       configFile: 'karma.conf.js',
@@ -120,22 +112,23 @@ gulp.task('test', ['coffee', 'templates'], function() {
       // Make sure failed tests cause gulp to exit non-zero
       throw err;
     });
-});
+}
+gulp.task('test', ['coffee', 'templates'], buildTest);
 
-gulp.task('clean', function() {
+function buildClean() {
   return gulp.src( paths.dest.build , {read: false} )
     .pipe( clean() );
-});
+}
+gulp.task('clean', buildClean);
 
-gulp.task('compress-images', ['clean'], function() {
-
+function buildCompressImages() {
   return gulp.src( paths.src.images )
     .pipe( imagemin() )
     .pipe( gulp.dest( paths.dest.images ) );
-});
+}
+gulp.task('compress-images', ['clean'], buildCompressImages);
 
-gulp.task('compress-code', ['clean', 'coffee', 'templates', 'test', 'html-includes'], function() {
-
+function buildCompressCode() {
   return gulp.src( paths.dest.index )
     .pipe(usemin({
       css: [ minifyCss(), 'concat', rev() ],
@@ -143,28 +136,29 @@ gulp.task('compress-code', ['clean', 'coffee', 'templates', 'test', 'html-includ
       js: [ ngmin(), uglify({ outSourceMap: true }), rev() ]
     }))
     .pipe( gulp.dest( paths.dest.build ) );
-});
+}
+gulp.task('compress-code', ['clean', 'coffee', 'templates', 'test', 'html-includes'], buildCompressCode);
 
-gulp.task('build', ['clean', 'html-includes', 'templates', 'coffee', 'test', 'compress-images', 'compress-code'], function() {
-
+function buildCleanTemp() {
   return gulp.src( paths.dest.jsPath, {read: false} )
     .pipe( clean() );
-});
+}
+gulp.task('build', ['clean', 'html-includes', 'templates', 'coffee', 'test', 'compress-images', 'compress-code'], buildCleanTemp);
 
 /*******
 ** DEV TASKS
 ***/
 
-gulp.task('dev-html-includes', ['dev-templates'], htmlIncludes);
+gulp.task('dev-html-includes', ['dev-templates'], buildHtmlIncludes);
 
-gulp.task('dev-templates', templates);
+gulp.task('dev-templates', buildTemplates);
 
-gulp.task('dev-html-livereload', ['dev-html-includes'], function() {
-
+function devHtmlLivereload() {
   return gulp.src( paths.dest.index )
     .pipe( embedlr({ port : LIVE_RELOAD_PORT }) )
     .pipe( gulp.dest( paths.dest.indexPath ) );
-});
+}
+gulp.task('dev-html-livereload', ['dev-html-includes'], devHtmlLivereload);
 
 var livereloadTasks = ['dev-html-includes', 'dev-html-livereload', 'dev-templates'];
 
