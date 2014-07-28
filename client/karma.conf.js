@@ -28,14 +28,14 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'js/app/**/*.js': ['coverage']
+      'build/js/app/**/*.js': ['coverage']
     },
 
 
     // Karma Coverage (Istanbul) config
     coverageReporter: {
       type : 'lcov', // lcov = lcov + html
-      dir : 'coverage/'
+      dir : 'build/coverage/'
     },
 
 

@@ -196,10 +196,13 @@ gulp.task('default', livereloadTasks, function() {
     lr.changed({ body: { files: [require('path').relative(__dirname, e.path)] } });
   }, 200));
 
-  gulp.src( getTestScripts() )
-    .pipe( karma({
-      configFile: 'karma.conf.js',
-      action: 'watch'
-    }) );
+  gulp.watch('build/js/**/*.js').on('change', _.debounce(function() {
+    gulp.src( getTestScripts() )
+      .pipe(karma({
+        configFile: 'karma.conf.js',
+        action: 'run'
+      }))
+      .on('error', function() { /* Don't break watch */ });
+  }, 200));
 
 });
