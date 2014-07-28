@@ -4,21 +4,23 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
   <head>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>My App</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
+    <link href="img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
-    <!-- build:css style/vendor.css -->
+    <!-- build:css build/style/vendor.css -->
     <!-- include:css(list:vendorStyles) -->
     <!-- endbuild -->
 
-    <!-- build:css style/main.css -->
+    <!-- build:css build/style/main.css -->
     <!-- include:css(style/**/*.css) -->
     <!-- endbuild -->
 
-</head>
+  </head>
   <body ng-app="myApp">
 
     <!-- Add your site or application content here -->
@@ -35,15 +37,15 @@
        ga('send', 'pageview');
     </script>
 
-    <!-- build:js js/vendor.js -->
+    <!-- build:js build/js/vendor.js -->
     <!-- include:js(list:vendorScripts) -->
     <!-- endbuild -->
 
-    <!-- build:js js/app.js -->
+    <!-- build:js build/js/app.js -->
     <script src="js/app/templates.js"></script>
     <script src="js/app/app.js"></script>
     <!-- include:js(js/app/*/**/*.js) -->
     <!-- endbuild -->
 
-</body>
+  </body>
 </html>

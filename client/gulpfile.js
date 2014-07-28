@@ -1,6 +1,9 @@
 'use strict';
 
 var gulp = require('gulp'),
+    watch = require('gulp-watch'),
+    plumber = require('gulp-plumber'),
+    filter = require('gulp-filter'),
     coffee = require('gulp-coffee'),
     gutil = require('gulp-util'),
     tinylr = require('tiny-lr'),
@@ -33,10 +36,10 @@ var paths = {
     images : 'img/**/*'
   },
   dest: {
-    index : 'index.html',
-    indexPath : './',
-    js : 'js/**/*.js',
-    jsPath : 'js/',
+    index : 'build/index.html',
+    indexPath : 'build/',
+    js : 'build/js/**/*.js',
+    jsPath : 'build/js/',
     build : 'build/',
     images : 'build/img'
   }
@@ -53,24 +56,42 @@ function getTestScripts() {
     ]);
 }
 
-function handleTaskError(pluginName) {
-  return function(e) {
-    gutil.log(gutil.colors.red('ERROR [' + pluginName + ']:'), e);
-    this.emit('end'); // Make sure errors won't stop gulp.watch
+// function handleTaskError(pluginName) {
+//   return function(e) {
+//     gutil.log(gutil.colors.red('ERROR [' + pluginName + ']:'), e);
+//     this.emit('end'); // Make sure errors won't stop gulp.watch
+//   };
+// }
+
+function filterDeleted(renameFunction) {
+
+  renameFunction = renameFunction || function(filePath) { return filePath; };
+
+  return function (file) {
+
+    if( file.event === 'deleted' ) {
+
+      var fileToRemove = renameFunction(file.path);
+      gutil.log( 'Removing file : ' + fileToRemove );
+      fs.unlink(fileToRemove);
+      return false;
+    }
+
+    return true;
   };
 }
 
 gulp.task('coffee', function() {
 
   return gulp.src( paths.src.coffee )
-    .pipe( coffee({ sourceMap: true }).on('error', handleTaskError('coffee')) )
+    .pipe( coffee({ sourceMap: true })/*.on('error', handleTaskError('coffee'))*/ )
     .pipe( gulp.dest( paths.dest.jsPath ) );
 });
 
 gulp.task('html-includes', function() {
 
   return gulp.src( paths.src.index )
-    .pipe( includeSources() )
+    .pipe( includeSources({ cwd : 'build/' }) )
     .pipe( rename('index.html') )
     .pipe( gulp.dest( paths.dest.indexPath ) );
 });
@@ -82,7 +103,7 @@ gulp.task('html-livereload', ['html-includes'], function() {
     .pipe( gulp.dest( paths.dest.indexPath ) );
 });
 
-gulp.task('templates', ['coffee'], function() {
+gulp.task('templates', function() {
 
   return gulp.src( paths.src.templates )
     .pipe( minifyHtml({ empty: true, conditionals: true, spare: true, quotes: true }) )
@@ -129,7 +150,7 @@ gulp.task('compress-code', ['clean', 'coffee', 'templates', 'html-includes'], fu
 
 gulp.task('build', ['clean', 'html-includes', 'templates', 'coffee', 'test', 'compress-images', 'compress-code']);
 
-var livereloadTasks = ['html-includes', 'html-livereload', 'coffee', 'templates'];
+var livereloadTasks = ['html-includes', 'html-livereload', 'templates'];
 
 gulp.task('default', livereloadTasks, function() {
 
@@ -138,20 +159,30 @@ gulp.task('default', livereloadTasks, function() {
 
   gulp.watch([
     paths.src.index,
-    paths.src.coffee,
     paths.src.vendorScripts,
     paths.src.vendorStyles,
     paths.src.templates
   ], livereloadTasks).on('change', function(e) {
-    gutil.log('File ' + e.path + ' was ' + e.type + ', building again...');
+    gutil.log( gutil.colors.magenta( _.last(e.path.split('/')) ) + ' was changed' );
   });
 
-  gulp.watch([
-    paths.dest.index,
-    paths.dest.js,
-    paths.src.templates,
-    paths.src.style
-  ]).on('change', _.debounce(function(e) {
+  watch({ glob: 'coffee/**/*.coffee' })
+    .pipe( filter( filterDeleted( function(filePath){
+      return filePath.replace(/\/coffee\//g, '/js/').replace(/\.coffee$/, '.js');
+    } ) ) )
+    .pipe( plumber() )
+    .pipe( coffee({ sourceMap: true }) )
+    .pipe( gulp.dest('build/js/') );
+
+  _.each(['style', 'img'], function(path) {
+    watch({ glob: path + '/**/*' })
+      .pipe( filter(filterDeleted( function (filePath) {
+        return filePath.replace(/\/client\//, '/client/build/');
+      })) )
+      .pipe( gulp.dest('build/' + path + '/') );
+  });
+
+  gulp.watch('build/**/*').on('change', _.debounce(function(e) {
     lr.changed({ body: { files: [require('path').relative(__dirname, e.path)] } });
   }, 200));
 
