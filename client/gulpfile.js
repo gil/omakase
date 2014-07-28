@@ -81,14 +81,14 @@ function filterDeleted(renameFunction) {
   };
 }
 
-gulp.task('coffee', function() {
+gulp.task('coffee', ['clean'], function() {
 
   return gulp.src( paths.src.coffee )
     .pipe( coffee({ sourceMap: true })/*.on('error', handleTaskError('coffee'))*/ )
     .pipe( gulp.dest( paths.dest.jsPath ) );
 });
 
-gulp.task('html-includes', function() {
+gulp.task('html-includes', ['coffee', 'templates'], function() {
 
   return gulp.src( paths.src.index )
     .pipe( includeSources({ cwd : 'build/' }) )
@@ -103,7 +103,7 @@ gulp.task('html-livereload', ['html-includes'], function() {
     .pipe( gulp.dest( paths.dest.indexPath ) );
 });
 
-gulp.task('templates', function() {
+gulp.task('templates', ['clean'], function() {
 
   return gulp.src( paths.src.templates )
     .pipe( minifyHtml({ empty: true, conditionals: true, spare: true, quotes: true }) )
@@ -127,7 +127,7 @@ gulp.task('test', ['coffee', 'templates'], function() {
 
 gulp.task('clean', function() {
   return gulp.src( paths.dest.build , {read: false} )
-    .pipe(clean());
+    .pipe( clean() );
 });
 
 gulp.task('compress-images', ['clean'], function() {
@@ -137,7 +137,7 @@ gulp.task('compress-images', ['clean'], function() {
     .pipe( gulp.dest( paths.dest.images ) );
 });
 
-gulp.task('compress-code', ['clean', 'coffee', 'templates', 'html-includes'], function() {
+gulp.task('compress-code', ['clean', 'coffee', 'templates', 'test', 'html-includes'], function() {
 
   return gulp.src( paths.dest.index )
     .pipe(usemin({
@@ -148,7 +148,11 @@ gulp.task('compress-code', ['clean', 'coffee', 'templates', 'html-includes'], fu
     .pipe( gulp.dest( paths.dest.build ) );
 });
 
-gulp.task('build', ['clean', 'html-includes', 'templates', 'coffee', 'test', 'compress-images', 'compress-code']);
+gulp.task('build', ['clean', 'html-includes', 'templates', 'coffee', 'test', 'compress-images', 'compress-code'], function() {
+
+  return gulp.src( paths.dest.jsPath, {read: false} )
+    .pipe( clean() );
+});
 
 var livereloadTasks = ['html-includes', 'html-livereload', 'templates'];
 
