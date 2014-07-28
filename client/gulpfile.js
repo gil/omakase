@@ -91,7 +91,7 @@ gulp.task('templates', ['coffee'], function() {
     .pipe( gulp.dest( paths.dest.jsPath ) );
 });
 
-gulp.task('test', ['coffee'], function() {
+gulp.task('test', ['coffee', 'templates'], function() {
 
   return gulp.src( getTestScripts() )
     .pipe(karma({
