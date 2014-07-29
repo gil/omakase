@@ -20,7 +20,7 @@ var gulp = require('gulp'),
     includeSources = require('gulp-include-source'),
     rename = require('gulp-rename'),
     clean = require('gulp-clean'),
-    karma = require('gulp-karma'),
+    karma = require('karma').server,
     _ = require('lodash'),
     fs = require('fs'),
     LIVE_RELOAD_PORT = 35740;
@@ -45,15 +45,22 @@ var paths = {
   }
 };
 
-function getTestScripts() {
+function getKarmaConf() {
 
+  var karmaConf = require('./karma.conf.js');
+  karmaConf({ LOG_INFO : 'info', set : function(config){ karmaConf = config; } });
   var vendorScripts = fs.readFileSync( paths.src.vendorScripts ).toString().split('\n');
 
-  return vendorScripts
-    .concat([
+  karmaConf = _.extend(karmaConf, {
+
+    files : vendorScripts.concat([
       'bower_components/angular-mocks/angular-mocks.js',
       paths.dest.js
-    ]);
+    ])
+
+  });
+
+  return karmaConf;
 }
 
 function filterDeleted(renameFunction) {
@@ -102,16 +109,8 @@ function buildTemplates() {
 }
 gulp.task('templates', ['clean'], buildTemplates);
 
-function buildTest() {
-  return gulp.src( getTestScripts() )
-    .pipe(karma({
-      configFile: 'karma.conf.js',
-      action: 'run'
-    }))
-    .on('error', function(err) {
-      // Make sure failed tests cause gulp to exit non-zero
-      throw err;
-    });
+function buildTest(done) {
+  karma.start( getKarmaConf(), done );
 }
 gulp.task('test', ['coffee', 'templates'], buildTest);
 
@@ -197,12 +196,7 @@ gulp.task('default', livereloadTasks, function() {
   }, 200));
 
   gulp.watch('build/js/**/*.js').on('change', _.debounce(function() {
-    gulp.src( getTestScripts() )
-      .pipe(karma({
-        configFile: 'karma.conf.js',
-        action: 'run'
-      }))
-      .on('error', function() { /* Don't break watch */ });
+    karma.start( getKarmaConf(), function(){ /* Don't stop watching */ } );
   }, 200));
 
 });
