@@ -3,6 +3,7 @@
   sudo: yes
   yum: name={{ item }} enablerepo=epel
   with_items:
+    - wget-1.12
     - nano-2.0.9
     - htop-1.0.3
     - git-1.7.1
