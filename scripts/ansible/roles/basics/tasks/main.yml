@@ -1,8 +1,17 @@
 ---
 - name: Install basic dependencies
-  yum: name={{ item }} enablerepo=epel
   sudo: yes
+  yum: name={{ item }} enablerepo=epel
   with_items:
-   - git-1.7.1
-   - nodejs-0.10.28
-   # - npm-1.3.6
+    - nano-2.0.9
+    - htop-1.0.3
+    - git-1.7.1
+    - nodejs-0.10.29
+    - npm-1.3.6
+
+- name: Install client build dependencies
+  sudo: yes
+  npm: name={{ item }} global=yes
+  with_items:
+    - bower
+    - gulp
