@@ -41,7 +41,8 @@ var paths = {
     js : 'build/js/**/*.js',
     jsPath : 'build/js/',
     build : 'build/',
-    images : 'build/img'
+    images : 'build/img',
+    style : 'build/style',
   }
 };
 
@@ -127,6 +128,12 @@ function buildCompressImages() {
 }
 gulp.task('compress-images', ['clean'], buildCompressImages);
 
+function buildCopyAssets() {
+  return gulp.src( paths.src.style )
+    .pipe( gulp.dest( paths.dest.style ) );
+}
+gulp.task('copy-assets', buildCopyAssets);
+
 function buildCompressCode() {
   return gulp.src( paths.dest.index )
     .pipe(usemin({
@@ -136,7 +143,7 @@ function buildCompressCode() {
     }))
     .pipe( gulp.dest( paths.dest.build ) );
 }
-gulp.task('compress-code', ['clean', 'coffee', 'templates', 'test', 'html-includes'], buildCompressCode);
+gulp.task('compress-code', ['clean', 'coffee', 'templates', 'test', 'html-includes', 'copy-assets'], buildCompressCode);
 
 function buildCleanTemp() {
   return gulp.src( paths.dest.jsPath, {read: false} )
@@ -160,8 +167,9 @@ function devHtmlLivereload() {
 gulp.task('dev-html-livereload', ['dev-html-includes'], devHtmlLivereload);
 
 var livereloadTasks = ['dev-html-includes', 'dev-html-livereload', 'dev-templates'];
+var initialLivereloadTasks = livereloadTasks.concat([ 'copy-assets' ]);
 
-gulp.task('default', livereloadTasks, function() {
+gulp.task('default', initialLivereloadTasks, function() {
 
   var lr = tinylr();
   lr.listen(LIVE_RELOAD_PORT);
