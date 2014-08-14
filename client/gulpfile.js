@@ -32,6 +32,7 @@ var paths = {
     style : 'style/**/*.css',
     vendorScripts : 'vendorScripts',
     vendorStyles : 'vendorStyles',
+    vendorAssets : 'vendorAssets',
     templates : 'templates/**/*.tpl.html',
     images : 'img/**/*'
   },
@@ -45,42 +46,6 @@ var paths = {
     style : 'build/style',
   }
 };
-
-function getKarmaConf() {
-
-  var karmaConf = require('./karma.conf.js');
-  karmaConf({ LOG_INFO : 'info', set : function(config){ karmaConf = config; } });
-  var vendorScripts = fs.readFileSync( paths.src.vendorScripts ).toString().split('\n');
-
-  karmaConf = _.extend(karmaConf, {
-
-    files : vendorScripts.concat([
-      'bower_components/angular-mocks/angular-mocks.js',
-      paths.dest.js
-    ])
-
-  });
-
-  return karmaConf;
-}
-
-function filterDeleted(renameFunction) {
-
-  renameFunction = renameFunction || function(filePath) { return filePath; };
-
-  return function (file) {
-
-    if( file.event === 'deleted' ) {
-
-      var fileToRemove = renameFunction(file.path);
-      gutil.log( 'Removing file : ' + fileToRemove );
-      fs.unlink(fileToRemove);
-      return false;
-    }
-
-    return true;
-  };
-}
 
 /*******
 ** BUILD TASKS
@@ -110,6 +75,24 @@ function buildTemplates() {
 }
 gulp.task('templates', ['clean'], buildTemplates);
 
+function getKarmaConf() {
+
+  var karmaConf = require('./karma.conf.js');
+  karmaConf({ LOG_INFO : 'info', set : function(config){ karmaConf = config; } });
+  var vendorScripts = fs.readFileSync( paths.src.vendorScripts ).toString().split('\n');
+
+  karmaConf = _.extend(karmaConf, {
+
+    files : vendorScripts.concat([
+      'bower_components/angular-mocks/angular-mocks.js',
+      paths.dest.js
+    ])
+
+  });
+
+  return karmaConf;
+}
+
 function buildTest(done) {
   karma.start( getKarmaConf(), done );
 }
@@ -128,9 +111,27 @@ function buildCompressImages() {
 }
 gulp.task('compress-images', ['clean'], buildCompressImages);
 
+function getAssets() {
+
+  var assets = {};
+  assets[ paths.src.style ] = paths.dest.style;
+
+  var vendorAssets = fs.readFileSync( paths.src.vendorAssets ).toString().split('\n');
+  _.each(vendorAssets, function(asset){ var parts = asset.split('='); assets[parts[0]] = parts[1]; });
+
+  return assets;
+}
+
 function buildCopyAssets() {
-  return gulp.src( paths.src.style )
-    .pipe( gulp.dest( paths.dest.style ) );
+
+  var chain = null;
+
+  _.each(getAssets(), function(dest, src) {
+    chain = gulp.src( src )
+      .pipe( gulp.dest( dest ) );
+  });
+
+  return chain;
 }
 gulp.task('copy-assets', ['clean'], buildCopyAssets);
 
@@ -167,6 +168,24 @@ function devHtmlLivereload() {
 gulp.task('dev-html-livereload', ['dev-html-includes'], devHtmlLivereload);
 
 gulp.task('dev-copy-assets', buildCopyAssets);
+
+function filterDeleted(renameFunction) {
+
+  renameFunction = renameFunction || function(filePath) { return filePath; };
+
+  return function (file) {
+
+    if( file.event === 'deleted' ) {
+
+      var fileToRemove = renameFunction(file.path);
+      gutil.log( 'Removing file : ' + fileToRemove );
+      fs.unlink(fileToRemove);
+      return false;
+    }
+
+    return true;
+  };
+}
 
 var livereloadTasks = ['dev-html-includes', 'dev-html-livereload', 'dev-templates'];
 var initialLivereloadTasks = livereloadTasks.concat([ 'dev-copy-assets' ]);
