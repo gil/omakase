@@ -26,6 +26,7 @@ set :deploy_to, '~/apps/' + fetch(:application)
 
 # Default value for linked_dirs is []
 # set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+set :linked_dirs, %w{log tmp/pids}
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -38,8 +39,12 @@ namespace :deploy do
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
+
       # Your restart mechanism here, for example:
       # execute :touch, release_path.join('tmp/restart.txt')
+      invoke 'unicorn:restart'
+      invoke 'nginx:restart'
+
     end
   end
 
@@ -80,5 +85,24 @@ namespace :deploy do
   #     # end
   #   end
   # end
+
+end
+
+# Create service start/stop/restart tasks
+{ :nginx => :nginx,
+  :unicorn => :unicorn_my_app }.each do |name, service|
+
+  namespace name do
+
+    [:start, :stop, :restart].each do |action|
+      desc "#{action} #{name}"
+      task action do
+        on roles(:app), in: :sequence, wait: 1 do
+          execute :sudo, :service, service, action
+        end
+      end
+    end
+
+  end
 
 end
