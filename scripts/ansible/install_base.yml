@@ -3,6 +3,7 @@
   hosts: all
   sudo: yes
   roles:
+    - swap
     - extra-repositories
     - basics
     - iptables

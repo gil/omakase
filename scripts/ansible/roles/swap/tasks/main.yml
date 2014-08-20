@@ -1,0 +1,20 @@
+---
+- name: Create swap space
+  command: dd if=/dev/zero of=/extraswap bs=1024 count=2M
+  when: ansible_swaptotal_mb < 1
+
+- name: Make swap
+  command: mkswap /extraswap
+  when: ansible_swaptotal_mb < 1
+
+- name: Add to fstab
+  lineinfile: dest=/etc/fstab regexp="extraswap" line="/extraswap none swap sw 0 0" state=present
+  when: ansible_swaptotal_mb < 1
+
+- name: Fix swap permission
+  file: path=/extraswap owner=root group=root mode=0600
+  when: ansible_swaptotal_mb < 1
+
+- name: Turn swap on
+  command: swapon -a
+  when: ansible_swaptotal_mb < 1
