@@ -125,7 +125,11 @@ end
       desc "#{action} #{name}"
       task action do
         on roles(:app), in: :sequence, wait: 1 do
-          execute :sudo, :service, service, action
+          begin
+            execute :sudo, :service, service, action
+          rescue
+            warn ": task \"#{action} #{name}\" failed, skipping..."
+          end
         end
       end
     end
