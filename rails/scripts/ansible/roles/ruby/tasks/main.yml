@@ -48,7 +48,6 @@
 
 - name: Make sure there's no lock to allow rehashing
   file: path=~/.rbenv/shims/.rbenv-shim state=absent
-  sudo: yes
 
 - name: Rehash
   shell: rbenv rehash
