@@ -7,6 +7,5 @@
 
 - name: Install client build dependencies
   hosts: client
-  sudo: yes
   roles:
     - client-basics
