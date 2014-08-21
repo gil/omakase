@@ -40,7 +40,7 @@ namespace :deploy do
   task :bundle_install do
     on roles(:app) do
 
-      within current_path.join('rails') do
+      within release_path.join('rails') do
         execute :bundle, :install
       end
 
@@ -53,7 +53,7 @@ namespace :deploy do
   task :client_dependencies do
     on roles(:app) do
 
-      within current_path.join('client') do
+      within release_path.join('client') do
         execute :npm, :install
         execute :bower, :install, "--config.interactive=false"
       end
@@ -67,7 +67,7 @@ namespace :deploy do
   task :build_client do
     on roles(:app) do
 
-      within current_path.join('client') do
+      within release_path.join('client') do
         execute :gulp, :build
       end
 
@@ -80,7 +80,7 @@ namespace :deploy do
   task :update_db do
     on roles(:app) do
 
-      within current_path.join('rails') do
+      within release_path.join('rails') do
         execute :bundle, :exec, :rake, "db:create"
         execute :bundle, :exec, :rake, "db:migrate"
       end
