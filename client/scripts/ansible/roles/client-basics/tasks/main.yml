@@ -1,0 +1,11 @@
+---
+- name: Install client build dependencies
+  sudo: yes
+  npm: name={{ item }} global=yes
+  with_items:
+    - bower
+    - gulp
+    - phantomjs
+
+- name: Configure PhantomJS bin path
+  lineinfile: dest=~/.bashrc line="export PHANTOMJS_BIN=/usr/bin/phantomjs"

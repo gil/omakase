@@ -4,3 +4,9 @@
   sudo: yes
   roles:
     - nginx
+
+- name: Install client build dependencies
+  hosts: client
+  sudo: yes
+  roles:
+    - client-basics
