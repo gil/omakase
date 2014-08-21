@@ -36,20 +36,6 @@ set :linked_dirs, %w{log tmp/pids}
 
 namespace :deploy do
 
-  desc 'Restart application'
-  task :restart do
-    on roles(:app), in: :sequence, wait: 5 do
-
-      # Your restart mechanism here, for example:
-      # execute :touch, release_path.join('tmp/restart.txt')
-      invoke 'unicorn:restart'
-      invoke 'nginx:restart'
-
-    end
-  end
-
-  after :publishing, :restart
-
   desc 'Bundle install rails app dependencies'
   task :bundle_install do
     on roles(:app) do
@@ -61,7 +47,34 @@ namespace :deploy do
     end
   end
 
-  before :restart, :bundle_install
+  before :updated, :bundle_install
+
+  desc 'Install client dependencies'
+  task :client_dependencies do
+    on roles(:app) do
+
+      within current_path.join('client') do
+        execute :npm, :install
+        execute :bower, :install, "--config.interactive=false"
+      end
+
+    end
+  end
+
+  before :updated, :client_dependencies
+
+  desc 'Build client'
+  task :build_client do
+    on roles(:app) do
+
+      within current_path.join('client') do
+        execute :gulp, :build
+      end
+
+    end
+  end
+
+  after :updated, :build_client
 
   desc 'Update database'
   task :update_db do
@@ -75,7 +88,21 @@ namespace :deploy do
     end
   end
 
-  after :bundle_install, :update_db
+  after :updated, :update_db
+
+  desc 'Restart application'
+  task :restart do
+    on roles(:app), in: :sequence, wait: 5 do
+
+      # Your restart mechanism here, for example:
+      # execute :touch, release_path.join('tmp/restart.txt')
+      invoke 'unicorn:restart'
+      invoke 'nginx:restart'
+
+    end
+  end
+
+  after :publishing, :restart
 
   # after :restart, :clear_cache do
   #   on roles(:web), in: :groups, limit: 3, wait: 10 do
