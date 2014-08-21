@@ -8,3 +8,8 @@
   hosts: app
   roles:
     - unicorn
+
+- name: Configure Rails app
+  hosts: app
+  roles:
+    - environment

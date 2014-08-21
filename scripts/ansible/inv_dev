@@ -4,5 +4,8 @@ vagrant@localhost:2222
 [app]
 vagrant@localhost:2222
 
+[app:vars]
+SECRET_KEY_BASE=.
+
 [db]
 vagrant@localhost:2222

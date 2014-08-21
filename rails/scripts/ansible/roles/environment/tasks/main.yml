@@ -1,0 +1,6 @@
+---
+- name: Set App ENV configs
+  lineinfile: dest=~/.bashrc line="{{ item }}"
+  with_items:
+    - export RAILS_ENV={{ env }}
+    - export SECRET_KEY_BASE={{ SECRET_KEY_BASE }}
