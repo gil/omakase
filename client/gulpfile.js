@@ -44,6 +44,7 @@ var paths = {
     build : 'build/',
     images : 'build/img',
     style : 'build/style',
+    all : 'build/**/*'
   }
 };
 
@@ -220,11 +221,11 @@ gulp.task('default', initialLivereloadTasks, function() {
       .pipe( gulp.dest('build/' + path + '/') );
   });
 
-  gulp.watch('build/**/*').on('change', _.debounce(function(e) {
+  gulp.watch(paths.dest.all).on('change', _.debounce(function(e) {
     lr.changed({ body: { files: [require('path').relative(__dirname, e.path)] } });
   }, 200));
 
-  gulp.watch('build/js/**/*.js').on('change', _.debounce(function() {
+  gulp.watch(paths.dest.js).on('change', _.debounce(function() {
     karma.start( getKarmaConf(), function(){ /* Don't stop watching */ } );
   }, 200));
 
