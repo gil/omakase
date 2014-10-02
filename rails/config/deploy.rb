@@ -26,7 +26,7 @@ set :pty, true
 
 # Default value for linked_dirs is []
 # set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
-set :linked_dirs, %w{log tmp/pids}
+set :linked_dirs, %w{rails/log rails/tmp/pids client/bower_components client/node_modules}
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
