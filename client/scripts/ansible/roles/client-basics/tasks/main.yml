@@ -7,5 +7,15 @@
     - gulp
     - phantomjs
 
+- name: PhantomJS dependencies
+  sudo: yes
+  yum: name={{ item }} enablerepo=epel
+  with_items:
+    - fontconfig
+    - freetype
+    - libfreetype.so.6
+    - libfontconfig.so.1
+    - libstdc++.so.6
+
 - name: Configure PhantomJS bin path
   lineinfile: dest=~/.bashrc line="export PHANTOMJS_BIN=/usr/bin/phantomjs"
