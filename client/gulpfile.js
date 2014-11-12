@@ -69,7 +69,7 @@ gulp.task('html-includes', ['coffee', 'templates'], buildHtmlIncludes);
 
 function buildTemplates() {
   return gulp.src( paths.src.templates )
-    .pipe( minifyHtml({ empty: true, conditionals: true, spare: true, quotes: true }) )
+    .pipe( minifyHtml({ empty: true, conditionals: true, comments: true, spare: true, quotes: true }) )
     .pipe( ngHtml2Js({ moduleName: 'appTemplates', prefix: 'templates/' }) )
     .pipe( concat('app/templates.js') )
     .pipe( gulp.dest( paths.dest.jsPath ) );
@@ -140,7 +140,7 @@ function buildCompressCode() {
   return gulp.src( paths.dest.index )
     .pipe(usemin({
       css: [ minifyCss(), 'concat', rev() ],
-      html: [ minifyHtml({ empty: true, conditionals: true, spare: true, quotes: true }) ],
+      html: [ minifyHtml({ empty: true, conditionals: true, comments: true, spare: true, quotes: true }) ],
       js: [ ngmin(), uglify({ outSourceMap: true }), rev() ]
     }))
     .pipe( gulp.dest( paths.dest.build ) );

@@ -12,6 +12,13 @@
     <meta name="viewport" content="width=device-width">
     <link href="img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
+    <!--[if lt IE 9]>
+      <!-- build:js(.) dist/vendor-ie.js -->
+          <script src="bower_components/es5-shim/es5-shim.js"></script>
+          <script src="bower_components/html5shiv/dist/html5shiv.js"></script>
+      <!-- endbuild -->
+    <![endif]-->
+
     <!-- build:css(.) dist/vendor.css -->
     <!-- include:css(list:vendorStyles) -->
     <!-- endbuild -->
